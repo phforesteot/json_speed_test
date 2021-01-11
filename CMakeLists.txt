@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.17)
+
+project(speed_test)
+include_directories("/Users/phforest/dev/json_speed_test/")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_executable(${PROJECT_NAME} main.cpp  )
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
