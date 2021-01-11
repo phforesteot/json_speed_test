@@ -134,6 +134,21 @@ nlohmann::json testnlohmann_cbor(std::vector<std::uint8_t>& data)
     return jo;
 }
 
+nlohmann::json testnlohmann_ubjson(std::vector<std::uint8_t>& data)
+{
+    stop_watch sw;
+    nlohmann::json jo;
+    std::uint8_t const* udata = reinterpret_cast<std::uint8_t const*>(&data[0]);
+    for (int i = 0; i < nrof_passes; ++i) {
+        jo = nlohmann::json::from_ubjson(udata, udata + (data.size()), false);
+    }
+    std::cout << "ubjson size:" << data.size() << endl;
+    cout << "ubjson:" << sw.nanosconds() << " (ns)" << endl;
+    sw.stop("ubjson:");
+    cout << endl;
+    return jo;
+}
+
 nlohmann::json testnlohmann_json(std::vector<std::uint8_t>& data)
 {
     stop_watch sw;
@@ -177,10 +192,12 @@ int main(int argc, char* argv[])
     std::vector<std::uint8_t> v_msgpack = load_binary("test.msgpack");
     std::vector<std::uint8_t> v_cbor = load_binary("test.cbor");
     std::vector<std::uint8_t> v_bson = load_binary("test.bson");
+    std::vector<std::uint8_t> v_ubjson = load_binary("test.ubjson");
 
     std::cout << "start speed test" << std::endl;
-    auto r4 = testnlohmann_json(v_json);
-    auto r1 = testnlohmann_msgapack(v_msgpack);
-    auto r3 = testnlohmann_cbor(v_cbor);
-    auto r2 = testnlohmann_bson(v_bson);
+    auto r1 = testnlohmann_json(v_json);
+    auto r2 = testnlohmann_ubjson(v_ubjson);
+    auto r3 = testnlohmann_msgapack(v_msgpack);
+    auto r4 = testnlohmann_cbor(v_cbor);
+    auto r5 = testnlohmann_bson(v_bson);
 }
